@@ -6,3 +6,7 @@ export * from './user/token-creation-failed.exception';
 
 export * from './expense/expense-fetch-failed.exception';
 export * from './expense/expense-create-failed.exception';
+export * from './expense/expense-update-failed.exception';
+
+export * from './category/category-create-failed.exception';
+export * from './category/categoy-already-exists.exception';

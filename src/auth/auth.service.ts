@@ -4,7 +4,10 @@ import { RegisterDto } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { InvalidCredentialsException } from 'src/utils/exceptions';
+import {
+  InvalidCredentialsException,
+  TokensCreatiomFailedException,
+} from 'src/utils/exceptions';
 
 @Injectable()
 export class AuthService {
@@ -51,10 +54,13 @@ export class AuthService {
       },
     );
 
-    if (!refreshToken || !accessToken) return { accessToken, refreshToken };
+    if (!refreshToken || !accessToken)
+      throw new TokensCreatiomFailedException();
+
+    return { accessToken, refreshToken };
   }
 
-  async googleAuth(email: string) {
+  async externalAuth(email: string) {
     const user = await this.usersService.getUser({ email });
     if (user) {
       return await this.generateTokens(user.id);

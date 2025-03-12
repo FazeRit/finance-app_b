@@ -53,7 +53,7 @@ model Expense {
 model ExpenseLimit {
   id         Int      @id @default(autoincrement())
   userId     Int
-  categoryId Int
+  categoryId Int      @unique
   limit      Float
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

@@ -1,7 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Strategy } from 'passport-jwt';
-import { Request } from 'express';
+import { Injectable } from '@nestjs/common';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'src/utils/types';
@@ -19,15 +18,7 @@ export class JwtAccessStrategy extends PassportStrategy(
     private usersService: UsersService,
   ) {
     super({
-      jwtFromRequest: (req: Request) => {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader) {
-          throw new UnauthorizedException('Authorization header missing');
-        }
-
-        const [, token] = authHeader.split(' ');
-        return token;
-      },
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: config.getOrThrow('JWT_ACCESS_SECRET'),
     });
