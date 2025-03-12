@@ -27,6 +27,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^11.0.6",
+    "@nestjs/throttler": "^6.4.0",
     "@types/passport-facebook": "^3.0.3",
     "argon2": "^0.41.1",
     "class-transformer": "^0.5.1",
@@ -41,6 +42,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "pdfreader": "^3.0.7",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"
@@ -52,6 +54,7 @@
     "@prisma/client": "^6.3.1",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
+    "@types/multer": "^1.4.12",
     "@types/node": "^20.3.1",
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/supertest": "^6.0.0",
