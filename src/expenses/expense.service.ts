@@ -40,12 +40,6 @@ export class ExpenseService {
   }
 
   async createExpense(userId: number, dto: CreateExpenseDto) {
-    const category = await this.prismaService.category.findUnique({
-      where: { id: dto.categoryId },
-    });
-
-    if (!category) throw new ExpenseCreateFailedException();
-
     let parsedDate: Date;
     try {
       parsedDate = this.parseDate(dto.date);
@@ -56,8 +50,10 @@ export class ExpenseService {
     try {
       return await this.prismaService.expense.create({
         data: {
-          userId,
-          categoryId: category.id,
+          user: { connect: { id: userId } },
+          category: dto.categoryId
+            ? { connect: { id: dto.categoryId } }
+            : undefined,
           amount: dto.amount,
           description: dto.description,
           date: parsedDate,
@@ -95,8 +91,10 @@ export class ExpenseService {
       }
     }
 
-    if (dto.categoryId) {
-      updateData.category = { connect: { id: dto.categoryId } };
+    if (dto.categoryId !== undefined) {
+      updateData.category = dto.categoryId
+        ? { connect: { id: dto.categoryId } }
+        : { disconnect: true };
     }
 
     try {

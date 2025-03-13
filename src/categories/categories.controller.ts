@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
 
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 class CategoryEntity implements Category {
   @ApiProperty({ description: 'Name of the category', example: 'Food' })
@@ -27,6 +28,7 @@ class CategoryEntity implements Category {
 }
 
 @ApiTags('categories')
+@UseGuards(AuthGuard('jwt-access'))
 @Controller('categories')
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}

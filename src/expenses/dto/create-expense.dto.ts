@@ -23,9 +23,10 @@ export class CreateExpenseDto {
     example: 2,
     type: Number,
   })
+  @IsOptional()
   @IsInt()
   @IsPositive()
-  categoryId: number;
+  categoryId?: number;
 
   @ApiProperty({
     description: 'A description of the expense',

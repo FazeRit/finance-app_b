@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { ExpenseModule } from './expenses/expense.module';
 import { CategoriesModule } from './categories/categories.module';
+import { DocumentModule } from './document/document.module';
+import { OpenAIModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     ExpenseModule,
     CategoriesModule,
+    DocumentModule,
+    OpenAIModule,
   ],
   controllers: [AppController],
   providers: [AppService],
