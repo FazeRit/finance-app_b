@@ -72,6 +72,7 @@ class ExpenseEntity implements Expense {
 }
 
 @ApiTags('expenses')
+@UseGuards(AuthGuard('jwt-access'))
 @Controller('expense')
 export class ExpenseController {
   constructor(private expenseService: ExpenseService) {}
@@ -85,7 +86,6 @@ export class ExpenseController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth('jwt-access')
-  @UseGuards(AuthGuard('jwt-access'))
   @Get()
   async getExpenses(@CurrentUser('id', ParseIntPipe) userId: number) {
     return await this.expenseService.getExpenses(userId);
@@ -108,7 +108,6 @@ export class ExpenseController {
     type: CreateExpenseDto,
     description: 'Expense creation data',
   })
-  @UseGuards(AuthGuard('jwt-access'))
   @Post()
   async createExpense(
     @CurrentUser('id', ParseIntPipe) userId: number,
@@ -134,7 +133,6 @@ export class ExpenseController {
     type: Number,
     required: true,
   })
-  @UseGuards(AuthGuard('jwt-access'))
   @Get(':id')
   async getExpenseById(
     @CurrentUser('id', ParseIntPipe) userId: number,
@@ -160,7 +158,6 @@ export class ExpenseController {
     type: Number,
     required: true,
   })
-  @UseGuards(AuthGuard('jwt-access'))
   @Delete(':id')
   async deleteExpenseById(
     @CurrentUser('id', ParseIntPipe) userId: number,
@@ -191,7 +188,6 @@ export class ExpenseController {
     type: UpdateExpenseDto,
     description: 'Expense update data',
   })
-  @UseGuards(AuthGuard('jwt-access'))
   @Put(':id')
   async editExpenseById(
     @CurrentUser('id', ParseIntPipe) userId: number,

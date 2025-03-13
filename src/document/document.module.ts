@@ -3,6 +3,8 @@ import { DocumentService } from './document.service';
 import { DocumentController } from './document.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ExpenseModule } from 'src/expenses/expense.module';
+import { OpenAIModule } from 'src/openai/openai.module'; // Import OpenAIModule
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
         callback(null, true);
       },
     }),
+    ExpenseModule,
+    OpenAIModule,
   ],
   providers: [DocumentService],
   controllers: [DocumentController],
