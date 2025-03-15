@@ -1,59 +1,62 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import * as pdfParse from 'pdf-parse';
-import { OpenAIService } from 'src/openai/openai.service';
+import { OCRService } from 'src/ocr/ocr.service';
 import { ExpenseService } from 'src/expenses/expense.service';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    private readonly openAIService: OpenAIService,
+    private readonly ocrService: OCRService,
     private readonly expenseService: ExpenseService,
   ) {}
 
   async uploadBankStatement(userId: number, file: Express.Multer.File) {
-    if (!file) {
-      throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
-    }
-
     try {
-      const extractedText = await this.extractTextFromPDF(file.buffer);
-      if (!extractedText.trim()) {
-        throw new HttpException(
-          'No text extracted from the PDF',
-          HttpStatus.BAD_REQUEST,
-        );
+      if (!file) {
+        throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
       }
 
-      const expenses =
-        await this.openAIService.extractExpensesFromText(extractedText);
+      const uploadedDocumentId = await this.ocrService.uploadDocument(file);
+      const documentId =
+        await this.ocrService.exportDataFromDocument(uploadedDocumentId);
+      const isOk = await this.ocrService.getStatusOk(documentId);
+      if (!isOk) {
+        throw new BadRequestException('Failed to process document');
+      }
+      const transactions = await this.ocrService.getExportedData(
+        documentId,
+        uploadedDocumentId,
+      );
 
-      const savedExpenses = await Promise.all(
-        expenses.map((expense) =>
-          this.expenseService.createExpense(userId, {
-            amount: expense.amount,
-            categoryId: expense.categoryId ?? undefined,
-            description: expense.description,
-            date: expense.date,
-          }),
-        ),
+      const expenseTransactions = transactions.filter(
+        (transaction: any) => transaction.amount < 0,
+      );
+
+      await Promise.all(
+        expenseTransactions.map(async (transaction: any) => {
+          const expenseDto = {
+            amount: Math.abs(transaction.amount),
+            description: transaction.descriptionLines[0] || 'Bank expense',
+            date: transaction.date || new Date().toISOString(),
+            categoryId: undefined,
+          };
+
+          return this.expenseService.createExpense(userId, expenseDto);
+        }),
       );
 
       return {
-        message: 'Expenses extracted and saved successfully',
-        expenses: savedExpenses,
+        message: 'Bank statement processed and expenses created successfully',
       };
-    } catch {
-      throw new InternalServerErrorException(`Failed to process PDF`);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        error.message || 'Failed to upload bank statement',
+      );
     }
-  }
-
-  private async extractTextFromPDF(buffer: Buffer): Promise<string> {
-    const data = await pdfParse(buffer);
-    return data.text;
   }
 }

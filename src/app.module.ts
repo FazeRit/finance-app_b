@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ExpenseModule } from './expenses/expense.module';
 import { CategoriesModule } from './categories/categories.module';
 import { DocumentModule } from './document/document.module';
-import { OpenAIModule } from './openai/openai.module';
+import { OCRModule } from './ocr/ocr.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { OpenAIModule } from './openai/openai.module';
     ExpenseModule,
     CategoriesModule,
     DocumentModule,
-    OpenAIModule,
+    OCRModule,
   ],
   controllers: [AppController],
   providers: [AppService],

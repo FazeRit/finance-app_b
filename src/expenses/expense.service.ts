@@ -19,9 +19,29 @@ export class ExpenseService {
       return dateInput;
     }
 
+    if (typeof dateInput === 'string' && /^\d{14}$/.test(dateInput)) {
+      const year = dateInput.slice(0, 4);
+      const month = parseInt(dateInput.slice(4, 6), 10) - 1;
+      const day = dateInput.slice(6, 8);
+      const hour = dateInput.slice(8, 10);
+      const minute = dateInput.slice(10, 12);
+      const second = dateInput.slice(12, 14);
+      const parsed = new Date(
+        Date.UTC(
+          parseInt(year, 10),
+          month,
+          parseInt(day, 10),
+          parseInt(hour, 10),
+          parseInt(minute, 10),
+          parseInt(second, 10),
+        ),
+      );
+      if (isNaN(parsed.getTime())) throw new Error('Invalid date string');
+      return parsed;
+    }
+
     const parsedDate = new Date(dateInput);
     if (isNaN(parsedDate.getTime())) throw new Error('Invalid date string');
-
     return parsedDate;
   }
 
