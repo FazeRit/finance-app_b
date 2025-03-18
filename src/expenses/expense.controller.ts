@@ -110,7 +110,7 @@ export class ExpenseController {
   })
   @Post()
   async createExpense(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id') userId: number,
     @Body() createExpenseDto: CreateExpenseDto,
   ) {
     return await this.expenseService.createExpense(userId, createExpenseDto);

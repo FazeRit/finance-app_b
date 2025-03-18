@@ -46,7 +46,14 @@ export class ExpenseService {
   }
 
   async getExpenses(userId: number) {
-    return this.prismaService.expense.findMany({ where: { userId } });
+    try {
+      return await this.prismaService.expense.findMany({
+        where: { userId },
+        include: { category: { select: { name: true } } },
+      });
+    } catch {
+      throw new ExpenseFetchFailedException();
+    }
   }
 
   async getExpenseById(userId: number, expenseId: number) {
