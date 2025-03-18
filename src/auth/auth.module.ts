@@ -7,10 +7,23 @@ import { LocalStrategy } from './strategy/local.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { JwtAccessStrategy } from './strategy/jwt-access.strategy';
 import { GoogleStrategy } from './strategy/google.strategy';
+import { TwitterStrategy } from './strategy/twitter.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [UsersModule, JwtModule.register({}), ConfigModule],
+  imports: [
+    UsersModule,
+    JwtModule.register({}),
+    PassportModule.register({ session: true }),
+    ConfigModule,
+  ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtAccessStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtAccessStrategy,
+    GoogleStrategy,
+    TwitterStrategy,
+  ],
 })
 export class AuthModule {}

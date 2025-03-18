@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { ExpenseModule } from './expenses/expense.module';
 import { CategoriesModule } from './categories/categories.module';
+import { DocumentModule } from './document/document.module';
+import { OCRModule } from './ocr/ocr.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { CategoriesModule } from './categories/categories.module';
     UsersModule,
     ExpenseModule,
     CategoriesModule,
+    DocumentModule,
+    OCRModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

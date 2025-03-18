@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, GetUserDto } from './dto';
 import {
@@ -30,18 +30,17 @@ export class UsersService {
   }
 
   async getUser({ id, email }: GetUserDto) {
-    if (!id && !email)
-      throw new BadRequestException(
-        'Please provide either id or email to search for a user.',
-      );
+    if (!id && !email) {
+      throw new UserNotFoundException();
+    }
 
-    const uniqueQuery = id ? { id } : { email };
-
-    const user = await this.prismaService.user.findUnique({
-      where: uniqueQuery,
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        OR: [id ? { id } : undefined, email ? { email } : undefined].filter(
+          Boolean,
+        ),
+      },
     });
-
-    if (!user) throw new UserNotFoundException();
 
     return user;
   }

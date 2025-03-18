@@ -26,14 +26,13 @@ model Category {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 
-  expenses     Expense[]
-  expenseLimits ExpenseLimit[]
+  Expense Expense[]
 }
 
 model Expense {
   id          Int      @id @default(autoincrement())
   userId      Int
-  categoryId  Int
+  categoryId  Int?
   amount      Float
   date        DateTime @default(now())
   description String?
@@ -41,7 +40,7 @@ model Expense {
   updatedAt   DateTime @updatedAt
 
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([categoryId])
@@ -50,16 +49,16 @@ model Expense {
   @@map("expenses")
 }
 
+
 model ExpenseLimit {
   id         Int      @id @default(autoincrement())
   userId     Int
-  categoryId Int
+  categoryId Int      @unique
   limit      Float
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([userId, categoryId])
   @@index([userId])
