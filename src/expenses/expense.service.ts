@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConsoleLogger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto } from './dto';
 import {
@@ -9,13 +9,18 @@ import {
 
 @Injectable()
 export class ExpenseService {
+  private readonly logger = new ConsoleLogger(ExpenseService.name);
+
   constructor(private readonly prismaService: PrismaService) {}
 
   private parseDate(dateInput?: string | Date): Date {
     if (!dateInput) return new Date();
 
     if (dateInput instanceof Date) {
-      if (isNaN(dateInput.getTime())) throw new Error('Invalid date object');
+      if (isNaN(dateInput.getTime())) {
+        this.logger.error(`Invalid date object provided: ${dateInput}`);
+        throw new Error('Invalid date object');
+      }
       return dateInput;
     }
 
@@ -36,22 +41,36 @@ export class ExpenseService {
           parseInt(second, 10),
         ),
       );
-      if (isNaN(parsed.getTime())) throw new Error('Invalid date string');
+      if (isNaN(parsed.getTime())) {
+        this.logger.error(`Invalid date string format: ${dateInput}`);
+        throw new Error('Invalid date string');
+      }
       return parsed;
     }
 
     const parsedDate = new Date(dateInput);
-    if (isNaN(parsedDate.getTime())) throw new Error('Invalid date string');
+    if (isNaN(parsedDate.getTime())) {
+      this.logger.error(`Invalid date string: ${dateInput}`);
+      throw new Error('Invalid date string');
+    }
     return parsedDate;
   }
 
   async getExpenses(userId: number) {
     try {
-      return await this.prismaService.expense.findMany({
+      const expenses = await this.prismaService.expense.findMany({
         where: { userId },
         include: { category: { select: { name: true } } },
       });
-    } catch {
+      if (expenses.length === 0) {
+        this.logger.warn(`No expenses found for user ${userId}`);
+      }
+      return expenses;
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch expenses for user ${userId}: ${error.message}`,
+        error.stack,
+      );
       throw new ExpenseFetchFailedException();
     }
   }
@@ -61,8 +80,10 @@ export class ExpenseService {
       where: { id: expenseId, userId },
     });
 
-    if (!expense) throw new ExpenseFetchFailedException();
-
+    if (!expense) {
+      this.logger.warn(`Expense ${expenseId} not found for user ${userId}`);
+      throw new ExpenseFetchFailedException();
+    }
     return expense;
   }
 
@@ -70,7 +91,11 @@ export class ExpenseService {
     let parsedDate: Date;
     try {
       parsedDate = this.parseDate(dto.date);
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Failed to parse date for expense creation: ${dto.date}`,
+        error.stack,
+      );
       throw new ExpenseCreateFailedException();
     }
 
@@ -92,7 +117,11 @@ export class ExpenseService {
           date: true,
         },
       });
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Failed to create expense for user ${userId}: ${error.message}`,
+        error.stack,
+      );
       throw new ExpenseCreateFailedException();
     }
   }
@@ -113,7 +142,11 @@ export class ExpenseService {
     if (dto.date) {
       try {
         updateData.date = this.parseDate(dto.date);
-      } catch {
+      } catch (error) {
+        this.logger.error(
+          `Failed to parse date for expense update: ${dto.date}`,
+          error.stack,
+        );
         throw new ExpenseUpdateFailedException();
       }
     }
@@ -129,7 +162,11 @@ export class ExpenseService {
         where: { id: expenseId },
         data: updateData,
       });
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        `Failed to update expense ${expenseId} for user ${userId}: ${error.message}`,
+        error.stack,
+      );
       throw new ExpenseUpdateFailedException();
     }
   }
@@ -137,8 +174,15 @@ export class ExpenseService {
   async deleteExpenseById(userId: number, expenseId: number) {
     await this.getExpenseById(userId, expenseId);
 
-    await this.prismaService.expense.delete({ where: { id: expenseId } });
-
-    return { message: 'Expense deleted successfully' };
+    try {
+      await this.prismaService.expense.delete({ where: { id: expenseId } });
+      return { message: 'Expense deleted successfully' };
+    } catch (error) {
+      this.logger.error(
+        `Failed to delete expense ${expenseId} for user ${userId}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }
