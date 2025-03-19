@@ -10,11 +10,13 @@ import { CategoriesModule } from './categories/categories.module';
 import { DocumentModule } from './document/document.module';
 import { OCRModule } from './ocr/ocr.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     AuthModule,
     PrismaModule,
+    CacheModule.register({ isGlobal: true }),
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     ExpenseModule,
