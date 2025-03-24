@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Get,
   Req,
+  Redirect,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -163,43 +164,6 @@ export class AuthController {
     return { message: 'Logout successfully' };
   }
 
-  @ApiOperation({ summary: 'Initiate Twitter authentication' })
-  @ApiResponse({
-    status: 302,
-    description: 'Redirects to Twitter login page',
-    schema: { type: 'string', format: 'uri' },
-  })
-  @UseGuards(AuthGuard('twitter'))
-  @Get('twitter')
-  async twitterLogin() {}
-
-  @ApiOperation({ summary: 'Twitter authentication callback' })
-  @ApiResponse({
-    status: 200,
-    description: 'Twitter authentication successful',
-    type: TokenResponseDto,
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - Twitter authentication failed',
-  })
-  @UseGuards(AuthGuard('twitter'))
-  @Get('twitter/callback')
-  async twitterCallback(
-    @Req()
-    req: Request & {
-      user: { twitterId: string; email: string; username: string };
-    },
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const { accessToken, refreshToken } = await this.authService.externalAuth(
-      req.user.email,
-    );
-
-    await this.setRefreshCookie(refreshToken, res);
-    return { accessToken };
-  }
-
   @ApiOperation({ summary: 'Initiate Google authentication' })
   @ApiResponse({
     status: 302,
@@ -212,9 +176,9 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Google authentication callback' })
   @ApiResponse({
-    status: 200,
-    description: 'Google authentication successful',
-    type: TokenResponseDto,
+    status: 302,
+    description: 'Redirects to frontend home page after Google authentication',
+    schema: { type: 'string', format: 'uri' },
   })
   @ApiResponse({
     status: 401,
@@ -222,15 +186,14 @@ export class AuthController {
   })
   @UseGuards(AuthGuard('google'))
   @Get('google/callback')
+  @Redirect('http://localhost:3001/', 302)
   async googleCallback(
     @Req() req: Request & { user: Profile },
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.externalAuth(
+    const { refreshToken } = await this.authService.externalAuth(
       req.user.email,
     );
-
     await this.setRefreshCookie(refreshToken, res);
-    return { accessToken };
   }
 }
