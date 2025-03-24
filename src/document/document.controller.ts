@@ -16,6 +16,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiResponse,
+  ApiConsumes,
 } from '@nestjs/swagger';
 
 @UseGuards(AuthGuard('jwt-access'))
@@ -31,9 +32,8 @@ export class DocumentController {
   @ApiResponse({ status: 400, description: 'Failed to process document' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth('jwt-access')
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Bank statement file',
-    type: 'multipart/form-data',
     schema: {
       type: 'object',
       properties: {
