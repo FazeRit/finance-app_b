@@ -136,9 +136,13 @@ export class AuthController {
   })
   @Post('refresh')
   async refresh(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    const { userId } = await this.authService.validateRefreshToken(
+      req.cookies.refreshToken,
+    );
+
     const { accessToken, refreshToken } =
       await this.authService.generateTokens(userId);
 

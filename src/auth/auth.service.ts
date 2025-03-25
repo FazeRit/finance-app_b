@@ -1,4 +1,8 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { RegisterDto } from './dto';
 import * as argon from 'argon2';
@@ -56,6 +60,37 @@ export class AuthService {
         error.stack,
       );
       throw new InvalidCredentialsException();
+    }
+  }
+
+  async validateRefreshToken(
+    refreshToken: string,
+  ): Promise<{ userId: number }> {
+    try {
+      if (!refreshToken) {
+        throw new UnauthorizedException('No refresh token provided');
+      }
+
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.config.getOrThrow('JWT_REFRESH_SECRET'),
+      });
+
+      if (!payload?.userId) {
+        throw new UnauthorizedException('Invalid refresh token payload');
+      }
+
+      const user = await this.usersService.getUser({ id: payload.userId });
+      if (!user) {
+        throw new UnauthorizedException('User no longer exists');
+      }
+
+      return { userId: payload.userId };
+    } catch (error) {
+      this.logger.error(
+        `Refresh token validation failed: ${error.message}`,
+        error.stack,
+      );
+      throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }
 
