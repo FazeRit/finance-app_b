@@ -79,7 +79,7 @@ export class StatisticsService {
       label,
     }));
     try {
-      await this.cacheManager.set(cacheKey, { dataPoints }, 600000);
+      await this.cacheManager.set(cacheKey, { dataPoints }, 10000);
     } catch (error) {
       this.logger.error(
         `Failed to cache category expenses for ${cacheKey}: ${error.message}`,
@@ -117,7 +117,7 @@ export class StatisticsService {
     );
 
     try {
-      await this.cacheManager.set(cacheKey, { dataPoints }, 600000);
+      await this.cacheManager.set(cacheKey, { dataPoints }, 10000);
     } catch (error) {
       this.logger.error(
         `Failed to cache yearly expenses for ${cacheKey}: ${error.message}`,
@@ -161,7 +161,7 @@ export class StatisticsService {
     );
 
     try {
-      await this.cacheManager.set(cacheKey, { dataPoints }, 600000);
+      await this.cacheManager.set(cacheKey, { dataPoints }, 10000);
     } catch (error) {
       this.logger.error(
         `Failed to cache monthly expenses for ${cacheKey}: ${error.message}`,
