@@ -50,6 +50,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
     origin: 'http://localhost:3001',
+
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
     credentials: true,
   });
