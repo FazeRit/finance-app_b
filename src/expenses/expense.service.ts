@@ -56,11 +56,13 @@ export class ExpenseService {
     return parsedDate;
   }
 
-  async getExpenses(userId: number) {
+  async getExpenses(userId: number, take?: number) {
     try {
       const expenses = await this.prismaService.expense.findMany({
         where: { userId },
+        orderBy: { date: 'desc' },
         include: { category: { select: { name: true } } },
+        ...(take ? { take } : {}),
       });
       if (expenses.length === 0) {
         this.logger.warn(`No expenses found for user ${userId}`);
