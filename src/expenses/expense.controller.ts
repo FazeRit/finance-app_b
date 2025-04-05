@@ -8,6 +8,7 @@ import {
   Delete,
   Param,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ExpenseService } from './expense.service';
 import { CurrentUser } from 'src/utils/decorators/get-user.decorator';
@@ -87,8 +88,20 @@ export class ExpenseController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth('jwt-access')
   @Get()
-  async getExpenses(@CurrentUser('id', ParseIntPipe) userId: number) {
-    return await this.expenseService.getExpenses(userId);
+  async getExpenses(
+    @CurrentUser('id', ParseIntPipe) userId: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('sort') sort?: 'asc' | 'desc',
+  ) {
+    return await this.expenseService.getExpenses(
+      userId,
+      take,
+      page,
+      limit,
+      sort === 'asc' || sort === 'desc' ? sort : undefined,
+    );
   }
 
   @ApiOperation({ summary: 'Create a new expense' })

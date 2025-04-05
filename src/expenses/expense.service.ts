@@ -56,16 +56,42 @@ export class ExpenseService {
     return parsedDate;
   }
 
-  async getExpenses(userId: number) {
+  async getExpenses(
+    userId: number,
+    take?: number,
+    page = 1,
+    limit = 10,
+    sort?: 'asc' | 'desc',
+  ) {
     try {
+      const actualLimit = take ?? limit;
+      const skip = take ? undefined : (page - 1) * actualLimit;
+
       const expenses = await this.prismaService.expense.findMany({
         where: { userId },
+        orderBy: { amount: sort || 'desc' },
         include: { category: { select: { name: true } } },
+        take: actualLimit,
+        skip,
       });
+
+      const total = await this.prismaService.expense.count({
+        where: { userId },
+      });
+
       if (expenses.length === 0) {
         this.logger.warn(`No expenses found for user ${userId}`);
       }
-      return expenses;
+
+      const totalPages = actualLimit > 0 ? Math.ceil(total / actualLimit) : 1;
+
+      return {
+        data: expenses,
+        total,
+        page,
+        limit: actualLimit,
+        totalPages,
+      };
     } catch (error) {
       this.logger.error(
         `Failed to fetch expenses for user ${userId}: ${error.message}`,
