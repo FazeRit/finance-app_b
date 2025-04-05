@@ -91,8 +91,17 @@ export class ExpenseController {
   async getExpenses(
     @CurrentUser('id', ParseIntPipe) userId: number,
     @Query('take', new ParseIntPipe({ optional: true })) take?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('sort') sort?: 'asc' | 'desc',
   ) {
-    return await this.expenseService.getExpenses(userId, take);
+    return await this.expenseService.getExpenses(
+      userId,
+      take,
+      page,
+      limit,
+      sort === 'asc' || sort === 'desc' ? sort : undefined,
+    );
   }
 
   @ApiOperation({ summary: 'Create a new expense' })

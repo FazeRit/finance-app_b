@@ -33,7 +33,7 @@ export class StatisticsService {
   ) {
     try {
       const expenses = await this.expenseService.getExpenses(userId);
-      const filtered = expenses.filter((expense) => {
+      const filtered = expenses.data.filter((expense) => {
         const expenseYear = expense.date.getFullYear();
         const expenseMonth = expense.date.getMonth() + 1;
         return (
