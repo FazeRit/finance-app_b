@@ -13,16 +13,6 @@ export class UpdateExpenseDto {
   amount?: number;
 
   @ApiProperty({
-    description: 'The updated category ID for the expense',
-    example: 3,
-    type: Number,
-    required: false,
-  })
-  @IsOptional()
-  @IsNumber()
-  categoryId?: number;
-
-  @ApiProperty({
     description: 'The updated description of the expense',
     example: 'Dinner with family',
     type: String,
