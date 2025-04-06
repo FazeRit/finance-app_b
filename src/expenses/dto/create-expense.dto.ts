@@ -1,6 +1,5 @@
 import {
   IsDateString,
-  IsInt,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -24,9 +23,8 @@ export class CreateExpenseDto {
     type: Number,
   })
   @IsOptional()
-  @IsInt()
-  @IsPositive()
-  categoryId?: number;
+  @IsString()
+  categoryName?: string;
 
   @ApiProperty({
     description: 'A description of the expense',

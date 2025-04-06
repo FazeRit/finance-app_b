@@ -49,7 +49,7 @@ export class CategoriesService {
 
   async addCategory(dto: CreateCategoryDto) {
     const category = await this.prismaService.category.findUnique({
-      where: { name: dto.name },
+      where: { name: dto.name.toUpperCase() },
     });
     if (category) {
       this.logger.error(`Category with name ${dto.name} already exists`);
@@ -59,6 +59,7 @@ export class CategoriesService {
     const createdCategory = await this.prismaService.category.create({
       data: {
         ...dto,
+        name: dto.name.toUpperCase(),
       },
     });
     if (!createdCategory) {

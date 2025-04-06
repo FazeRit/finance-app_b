@@ -104,6 +104,7 @@ export class ExpenseService {
   async getExpenseById(userId: number, expenseId: number) {
     const expense = await this.prismaService.expense.findFirst({
       where: { id: expenseId, userId },
+      include: { category: { select: { name: true } } },
     });
 
     if (!expense) {
@@ -129,8 +130,8 @@ export class ExpenseService {
       return await this.prismaService.expense.create({
         data: {
           user: { connect: { id: userId } },
-          category: dto.categoryId
-            ? { connect: { id: dto.categoryId } }
+          category: dto.categoryName
+            ? { connect: { name: dto.categoryName.toUpperCase() } }
             : undefined,
           amount: dto.amount,
           description: dto.description,
@@ -175,12 +176,6 @@ export class ExpenseService {
         );
         throw new ExpenseUpdateFailedException();
       }
-    }
-
-    if (dto.categoryId !== undefined) {
-      updateData.category = dto.categoryId
-        ? { connect: { id: dto.categoryId } }
-        : { disconnect: true };
     }
 
     try {
