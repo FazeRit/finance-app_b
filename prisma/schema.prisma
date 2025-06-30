@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id             Int            @id @default(autoincrement())
+  id             String         @id @default(uuid())
   email          String         @unique
   hashedPassword String?        @map("hashed_password")
   createdAt      DateTime       @default(now()) @map("created_at")
@@ -21,7 +21,7 @@ model User {
 }
 
 model Category {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(uuid())
   name         String         @unique
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -30,9 +30,9 @@ model Category {
 }
 
 model Expense {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  categoryId  Int?
+  id          String       @id @default(uuid())
+  userId      String
+  categoryId  String?
   amount      Float
   date        DateTime @default(now())
   description String?
@@ -49,11 +49,10 @@ model Expense {
   @@map("expenses")
 }
 
-
 model ExpenseLimit {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  categoryId Int      @unique
+  id         String       @id @default(uuid())
+  userId     String
+  categoryId String      @unique
   limit      Float
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

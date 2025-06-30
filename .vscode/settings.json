@@ -1,0 +1,123 @@
+{
+	"workbench.iconTheme": "vscode-icons",
+	"gavyn-test-mui.sidebarChatDisabled": true,
+	"files.autoSave": "afterDelay",
+	"editor.minimap.renderCharacters": false,
+	"editor.minimap.enabled": false,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"editor.wordWrap": "wordWrapColumn",
+	"jsonFlow.files.include": [
+		"json",
+		"jsonc",
+		"json5",
+		"cfg",
+		"csv",
+		"env",
+		"hcl",
+		"ini",
+		"properties",
+		"toml",
+		"tsv",
+		"xml",
+		"yaml",
+		"yml"
+	],
+	"workbench.colorTheme": "Shades of Purple (Super Dark)",
+	"workbench.editor.enablePreview": false,
+	"[assembly]": {
+		"editor.defaultFormatter": "xsro.masm-tasm"
+	},
+	"masmtasm.ASM.emulator": "dosbox",
+	"masmtasm.ASM.assembler": "TASM",
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"typescript.tsc.autoDetect": "off",
+	"json.schemas": [
+		
+
+		{
+			"fileMatch": [
+				"*.json",
+				"*.jsonc"
+			],
+			"url": "https://json.schemastore.org/tsconfig"
+		}
+	],
+	"workbench.colorCustomizations": {
+		"editorSuggestWidget.selectedBackground": "#6342AD",
+		"activityBar.background": "#0D1231",
+		"titleBar.activeBackground": "#200ED6",
+		"titleBar.activeForeground": "#FDFDFC"
+	},
+	"editor.codeActionsOnSave": {
+	
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll": "explicit"
+	},
+	"editor.cursorBlinking": "smooth",
+	"editor.cursorSmoothCaretAnimation": "explicit",
+	"eslint.validate": [
+		"javascript",
+		"typescript",
+		"javascriptreact",
+		"typescriptreact"
+	],
+	"[dynamic csv]": {
+		"editor.inlayHints.maximumLength": 0
+	},
+	"eslint.debug": true,
+	"eslint.format.enable": true,
+	"eslint.workingDirectories": [
+		"packages/backend"
+	],
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"[javascript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true,
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"js/ts.implicitProjectConfig.checkJs": true,
+	"eslint.options": {
+		"overrideConfigFile": ".eslintrc.json",
+	},
+	"eslint.codeActionsOnSave.rules": null,
+	"tailwind-fold.autoFold": true,
+	"notebook.formatOnCellExecution": true,
+	"markdown.extension.tableFormatter.normalizeIndentation": true,
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	"files.autoSaveWhenNoErrors": true,
+	"files.refactoring.autoSave": false,
+	"window.confirmSaveUntitledWorkspace": false,
+	"notebook.defaultFormatter": "dbaeumer.vscode-eslint",
+	"editor.formatOnSaveMode": "modifications",
+	"editor.formatOnSave": true,
+	"notebook.codeActionsOnSave": {
+
+	},
+	"typescript.format.enable": false,
+	"typescript.format.indentSwitchCase": false,
+	"typescript.inlayHints.enumMemberValues.enabled": true,
+	"enableTelemetry": true,
+	"editor.fontFamily": "Fira Code",
+	"[csv]": {
+		"editor.inlayHints.maximumLength": 0
+	},
+	"remote.extensionKind": {
+		
+		"pub.name": [
+			"ui"
+		]
+	},
+	"markdown-todo.sortByCount": false
+}
