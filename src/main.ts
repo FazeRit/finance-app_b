@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
-import { HttpExceptionFilter } from './utils/filters/http-exception.filter';
+import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -19,10 +19,6 @@ async function bootstrap() {
     .setTitle('Fin app')
     .setDescription('API documentation for finance app')
     .setVersion('1.0')
-    .addTag('categories')
-    .addTag('expenses')
-    .addTag('auth')
-    .addTag('statistics')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'jwt-access',
@@ -57,4 +53,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap();
