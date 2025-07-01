@@ -1,13 +1,6 @@
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { applyDecorators } from '@nestjs/common';
-import { Category } from '@prisma/client';
-
-class CategoryEntity implements Category {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { CategoryEntity } from '../types/categories.types';
 
 export const GetCategoriesDoc = applyDecorators(
   ApiOperation({ summary: 'Get all categories for expenses' }),
