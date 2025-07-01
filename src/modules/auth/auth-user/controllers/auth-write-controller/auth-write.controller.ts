@@ -1,9 +1,4 @@
 import {
-	ApiBearerAuth,
-	ApiBody,
-	ApiCookieAuth,
-	ApiOperation,
-	ApiResponse,
 	ApiTags
 } from '@nestjs/swagger';
 import { AuthFacadeService } from '../../services/auth-facade/auth-facade.service';
@@ -29,12 +24,9 @@ import {
 	RefreshDoc,
 	RegisterDoc
 } from '../../../docs';
-import { LogoutResponseDto } from 'src/modules/auth/auth-shared/dto/response/logout-response.dto';
 import { Profile } from 'passport-google-oauth20';
 import { RegisterDto } from '../../dto/request/register.dto';
 import { Request, Response } from 'express';
-import { TokenResponseDto } from 'src/modules/auth/auth-shared/dto/response/token-response.dto';
-import { User } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')

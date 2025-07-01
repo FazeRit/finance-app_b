@@ -48,7 +48,7 @@ export class DocumentController {
   @Post('bank-statement')
   @UseInterceptors(FileInterceptor('file'))
   async uploadBankStatement(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id',) userId: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
     await this.documentService.uploadBankStatement(userId, file);

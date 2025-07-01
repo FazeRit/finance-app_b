@@ -1,6 +1,6 @@
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { applyDecorators } from '@nestjs/common';
-import { TokenResponseDto } from '../auth-shared/dto/response/token-response.dto';
+import { TokensResponseDto } from '../auth-shared/dto/response/tokens-response.dto';
 
 export const RefreshDoc = applyDecorators(
 	ApiOperation({ summary: 'Refresh access token using refresh token' }),
@@ -8,7 +8,7 @@ export const RefreshDoc = applyDecorators(
 	ApiResponse({
 		status: 200,
 		description: 'Access token refreshed successfully',
-		type: TokenResponseDto,
+		type: TokensResponseDto,
 	}),
 	ApiResponse({
 		status: 401,

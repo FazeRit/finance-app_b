@@ -9,6 +9,7 @@ import { DocumentModule } from './modules/document/document.module';
 import { OCRModule } from './modules/ocr/ocr.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { EnvModule } from './modules/env/env.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
 	imports: [
@@ -17,6 +18,12 @@ import { EnvModule } from './modules/env/env.module';
 		ConfigModule.forRoot({
 			isGlobal: true,
 		},),
+		CacheModule.register({
+			isGlobal: true,
+			store: 'memory',
+			max: 1000, // Maximum number of items in cache
+			ttl: 3600, // Time to live in seconds
+		}),
 		UsersModule,
 		ExpenseModule,
 		EnvModule,

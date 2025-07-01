@@ -1,6 +1,6 @@
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { applyDecorators } from '@nestjs/common';
-import { TokenResponseDto } from '../auth-shared/dto/response/token-response.dto';
+import { TokensResponseDto } from '../auth-shared/dto/response/tokens-response.dto';
 
 export const LoginDoc = applyDecorators(
 	ApiOperation({ summary: 'Log in a user with email and password' }),
@@ -17,7 +17,7 @@ export const LoginDoc = applyDecorators(
 	ApiResponse({
 		status: 200,
 		description: 'User logged in successfully',
-		type: TokenResponseDto,
+		type: TokensResponseDto,
 	}),
 	ApiResponse({
 		status: 401,

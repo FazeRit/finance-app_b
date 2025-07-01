@@ -22,7 +22,6 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
-import { Expense } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 class DeleteExpenseResponse {
@@ -33,45 +32,6 @@ class DeleteExpenseResponse {
   message: string;
 }
 
-class ExpenseEntity implements Expense {
-  @ApiProperty({ description: 'Unique identifier of the expense', example: 1 })
-  id: number;
-
-  @ApiProperty({
-    description: 'ID of the user who created the expense',
-    example: 2,
-  })
-  userId: number;
-
-  @ApiProperty({ description: 'ID of the expense category', example: 3 })
-  categoryId: number;
-
-  @ApiProperty({ description: 'Amount of the expense', example: 99.99 })
-  amount: number;
-
-  @ApiProperty({
-    description: 'Description of the expense',
-    example: 'Lunch with team',
-    nullable: true,
-  })
-  description: string | null;
-
-  @ApiProperty({ description: 'Date of the expense', example: '2025-03-12' })
-  date: Date;
-
-  @ApiProperty({
-    description: 'Creation timestamp',
-    example: '2025-03-12T10:00:00Z',
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    description: 'Last update timestamp',
-    example: '2025-03-12T12:00:00Z',
-  })
-  updatedAt: Date;
-}
-
 @ApiTags('expenses')
 @UseGuards(AuthGuard('jwt-access'))
 @Controller('expense')
@@ -79,17 +39,12 @@ export class ExpenseController {
   constructor(private expenseService: ExpenseService) {}
 
   @ApiOperation({ summary: 'Get all expenses for the authenticated user' })
-  @ApiResponse({
-    status: 200,
-    description: 'Expenses fetched successfully',
-    type: [ExpenseEntity],
-  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   @ApiBearerAuth('jwt-access')
   @Get()
   async getExpenses(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id') userId: string,
     @Query('take', new ParseIntPipe({ optional: true })) take?: number,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
@@ -106,11 +61,6 @@ export class ExpenseController {
 
   @ApiOperation({ summary: 'Create a new expense' })
   @ApiResponse({
-    status: 201,
-    description: 'Expense created successfully',
-    type: ExpenseEntity,
-  })
-  @ApiResponse({
     status: 400,
     description: 'Invalid input or category not found',
   })
@@ -123,18 +73,13 @@ export class ExpenseController {
   })
   @Post()
   async createExpense(
-    @CurrentUser('id') userId: number,
+    @CurrentUser('id') userId: string,
     @Body() createExpenseDto: CreateExpenseDto,
   ) {
     return await this.expenseService.createExpense(userId, createExpenseDto);
   }
 
   @ApiOperation({ summary: 'Get an expense by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Expense fetched successfully',
-    type: ExpenseEntity,
-  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Expense not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
@@ -148,8 +93,8 @@ export class ExpenseController {
   })
   @Get(':id')
   async getExpenseById(
-    @CurrentUser('id', ParseIntPipe) userId: number,
-    @Param('id', ParseIntPipe) expenseId: number,
+    @CurrentUser('id') userId: string,
+    @Param('id') expenseId: string,
   ) {
     return await this.expenseService.getExpenseById(userId, expenseId);
   }
@@ -173,18 +118,13 @@ export class ExpenseController {
   })
   @Delete(':id')
   async deleteExpenseById(
-    @CurrentUser('id', ParseIntPipe) userId: number,
-    @Param('id', ParseIntPipe) expenseId: number,
+    @CurrentUser('id') userId: string,
+    @Param('id') expenseId: string,
   ) {
     return await this.expenseService.deleteExpenseById(userId, expenseId);
   }
 
   @ApiOperation({ summary: 'Update an expense by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Expense updated successfully',
-    type: ExpenseEntity,
-  })
   @ApiResponse({ status: 400, description: 'Invalid input' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Expense not found' })
@@ -203,8 +143,8 @@ export class ExpenseController {
   })
   @Put(':id')
   async editExpenseById(
-    @CurrentUser('id', ParseIntPipe) userId: number,
-    @Param('id', ParseIntPipe) expenseId: number,
+    @CurrentUser('id',) userId: string,
+    @Param('id',) expenseId: string,
     @Body() dto: UpdateExpenseDto,
   ) {
     return await this.expenseService.editExpenseById(userId, expenseId, dto);

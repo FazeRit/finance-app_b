@@ -55,7 +55,7 @@ export class StatisticsController {
   @ApiBearerAuth('jwt-access')
   @Get('category-expenses-by-month')
   async getCategoryExpenses(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id',) userId: string,
     @Query('year', ParseIntPipe) year: number,
     @Query('month', ParseIntPipe) month: number,
   ) {
@@ -93,7 +93,7 @@ export class StatisticsController {
   @ApiBearerAuth('jwt-access')
   @Get('total-expenses-by-year')
   async getTotalExpensesByYear(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id') userId: string,
     @Query('year', ParseIntPipe) year: number,
   ) {
     return await this.statisticsService.getTotalExpensesByYear(userId, year);
@@ -130,7 +130,7 @@ export class StatisticsController {
   @ApiBearerAuth('jwt-access')
   @Get('total-expenses-by-month')
   async getTotalExpensesByMonth(
-    @CurrentUser('id', ParseIntPipe) userId: number,
+    @CurrentUser('id',) userId: string,
     @Query('year', ParseIntPipe) year: number,
     @Query('month', ParseIntPipe) month: number,
   ) {

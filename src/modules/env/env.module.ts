@@ -5,6 +5,7 @@ import { EnvGetService } from "./service/env-get.service";
 @Global()
 @Module({
 	imports: [EnvGetModule],
+	providers: [EnvGetService],
 	exports: [EnvGetService],
 })
 export class EnvModule {}

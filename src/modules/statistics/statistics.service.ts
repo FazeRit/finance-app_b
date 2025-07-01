@@ -27,7 +27,7 @@ export class StatisticsService {
   ]);
 
   private async getFilteredExpenses(
-    userId: number,
+    userId: string,
     year?: number,
     month?: number,
   ) {
@@ -55,7 +55,7 @@ export class StatisticsService {
     }
   }
 
-  async getCategoryExpenses(userId: number, year?: number, month?: number) {
+  async getCategoryExpenses(userId: string, year?: number, month?: number) {
     const cacheKey = `category-${userId}-${year}-${month}`;
     const cached = await this.cacheManager.get<{
       dataPoints: { y: number; label: string }[];
@@ -89,7 +89,7 @@ export class StatisticsService {
     return { dataPoints };
   }
 
-  async getTotalExpensesByYear(userId: number, year: number) {
+  async getTotalExpensesByYear(userId: string, year: number) {
     const cacheKey = `yearly-${userId}-${year}`;
     const cached = await this.cacheManager.get<{
       dataPoints: { y: number; label: string }[];
@@ -127,7 +127,8 @@ export class StatisticsService {
     }
     return { dataPoints };
   }
-  async getTotalExpensesByMonth(userId: number, year: number, month: number) {
+
+  async getTotalExpensesByMonth(userId: string, year: number, month: number) {
     const cacheKey = `monthly-${userId}-${year}-${month}`;
     const cached = await this.cacheManager.get<{
       dataPoints: { y: number; label: string }[];

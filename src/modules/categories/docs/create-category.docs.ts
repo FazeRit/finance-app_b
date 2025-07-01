@@ -1,0 +1,23 @@
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { applyDecorators } from '@nestjs/common';
+import { Category } from '@prisma/client';
+import { CreateCategoryDto } from '../dto/request/create-category.dto';
+import { CategoryEntity } from '../types/categories.types';
+
+export const CreateCategoryDoc = applyDecorators(
+  ApiOperation({ summary: 'Create new category for expenses' }),
+  ApiResponse({
+    status: 201,
+    description: 'Category created successfully',
+    type: CategoryEntity,
+  }),
+  ApiResponse({
+    status: 409,
+    description: 'Category with this name already exists',
+  }),
+  ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  }),
+  ApiBody({ type: CreateCategoryDto }),
+) 

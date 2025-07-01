@@ -21,6 +21,7 @@ export class AuthFacadeService {
 
 	public async validateUser(email: string, password: string): Promise<ApiResponse<User>> {
 		const user = await this.authWriteService.validateUser(email, password);
+
 		return ApiResponseFactory.createResponse({
 			data: user,
 		});

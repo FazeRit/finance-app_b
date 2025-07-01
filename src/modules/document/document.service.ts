@@ -18,7 +18,7 @@ export class DocumentService {
     private readonly expenseService: ExpenseService,
   ) {}
 
-  async uploadBankStatement(userId: number, file: Express.Multer.File) {
+  async uploadBankStatement(userId: string, file: Express.Multer.File) {
     try {
       if (!file) {
         this.logger.error(`No file uploaded for user ${userId}`);
