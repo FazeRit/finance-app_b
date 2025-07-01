@@ -1,5 +1,5 @@
 import { BadRequestException, ConsoleLogger, Injectable } from '@nestjs/common';
-import { ExpenseService } from 'src/modules/expenses/expense.service';
+import { ExpenseWriteService } from 'src/modules/expenses/services/expense-write-service/expense-write.service';
 import { OCRService } from 'src/modules/ocr/ocr.service';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class DocumentWriteService {
 
 	constructor(
 		private readonly ocrService: OCRService,
-		private readonly expenseService: ExpenseService,
+		private readonly expenseService: ExpenseWriteService,
 	) {}
 
 	async uploadBankStatement(userId: string, file: Express.Multer.File): Promise<{ message: string }> {
@@ -54,7 +54,8 @@ export class DocumentWriteService {
 					date: transaction.date || new Date().toISOString(),
 					categoryId: undefined,
 				};
-				return this.expenseService.createExpense(userId, expenseDto);
+
+				return this.expenseService.createExpense(expenseDto, userId);
 				},
 			),
 		);

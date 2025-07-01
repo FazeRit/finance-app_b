@@ -1,23 +1,15 @@
 import { Module } from '@nestjs/common';
-import { StatisticsController } from './statistics.controller';
-import { StatisticsService } from './statistics.service';
-import { ExpenseModule } from 'src/modules/expenses/expense.module';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { PrismaModule } from '../prisma/prisma.module';
+import { StatisticsFacadeService } from './services/statistics-facade-service/statistics-facade.service';
+import { StatisticsReadController } from './controllers/statistics-read-controller/statistics-read.controller';
+import { StatisticsReadService } from './services/statistics-read-service/statistics-read.service';
 
 @Module({
-  imports: [
-    ExpenseModule,
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          ttl: 60000,
-          limit: 3,
-        },
-      ],
-      errorMessage: 'Rate limit exceeded. Please try again after 60 seconds.',
-    }),
+  imports: [PrismaModule],
+  controllers: [StatisticsReadController],
+  providers: [
+    StatisticsFacadeService,
+    StatisticsReadService,
   ],
-  controllers: [StatisticsController],
-  providers: [StatisticsService],
 })
 export class StatisticsModule {}

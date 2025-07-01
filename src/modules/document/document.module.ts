@@ -9,6 +9,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
 	imports: [
+		ExpenseModule,
 		ThrottlerModule.forRoot({
 		throttlers: [
 			{

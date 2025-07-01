@@ -1,18 +1,27 @@
-import { Category } from '@prisma/client';
-import { Controller, Post } from '@nestjs/common';
-import { CreateCategoryDto } from '../../dto/request/create-category.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiResponse } from '../../../../shared/types/api-response.types';
-import { CreateCategoryDoc } from '../../docs';
+import { AuthGuard } from '@nestjs/passport';
+import {
+	Body,
+	Controller,
+	Post,
+	UseGuards
+} from '@nestjs/common';
 import { CategoriesFacadeService } from '../../services/categories-facade-service/categories-facade.service';
-import { ApiResponseFactory } from 'src/shared/factories/api-response.factory';
+import { Category } from '@prisma/client';
+import { CreateCategoryDoc } from '../../docs';
+import { CreateCategoryDto } from '../../dto/request/create-category.dto';
 
+@ApiTags('categories')
+@ApiBearerAuth('jwt-access')
+@UseGuards(AuthGuard('jwt-access'))
 @Controller('categories')
 export class CategoriesWriteController {
 	constructor(private readonly facade: CategoriesFacadeService) {}
 
 	@CreateCategoryDoc
 	@Post()
-	public async addCategory(dto: CreateCategoryDto): Promise<ApiResponse<Category>> {
-		return this.facade.addCategory(dto)
+	public async addCategory(@Body() dto: CreateCategoryDto): Promise<ApiResponse<Category>> {
+		return this.facade.addCategory(dto);
 	}
 }
