@@ -1,8 +1,8 @@
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { applyDecorators } from '@nestjs/common';
 import { Category } from '@prisma/client';
-import { CreateCategoryDto } from '../dto/request/create-category.dto';
 import { CategoryEntity } from '../types/categories.types';
+import { CreateCategoryDto } from '../dto/request/create-category.dto';
 
 export const CreateCategoryDoc = applyDecorators(
   ApiOperation({ summary: 'Create new category for expenses' }),
